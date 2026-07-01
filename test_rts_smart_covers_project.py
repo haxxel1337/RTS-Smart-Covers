@@ -149,7 +149,7 @@ def test_manifest() -> None:
         "name": "RTS Smart Covers",
         "config_flow": True,
         "iot_class": "local_push",
-        "version": "0.3.0",
+        "version": "0.3.1",
     }
 
     for key, expected_value in expected.items():

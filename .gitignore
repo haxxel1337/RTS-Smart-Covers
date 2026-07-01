@@ -1,19 +1,55 @@
+# Python cache
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+
+# Test / lint / type-check caches
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 .coverage
 htmlcov/
-.vscode/
-.idea/
-.DS_Store
-Thumbs.db
-.env
+
+# Virtual environments
 .venv/
 venv/
-dist/
+env/
+ENV/
+
+# Build artifacts
 build/
+dist/
 *.egg-info/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local env/secrets
+.env
+.env.*
+*.local
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+*.old
+
+# Home Assistant local runtime/config junk if ever copied into repo
+.storage/
+.homeassistant/
+deps/
+tts/
+known_devices.yaml
+home-assistant.log*
+OZW_Log.txt
+ip_bans.yaml
