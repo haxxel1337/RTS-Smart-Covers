@@ -321,3 +321,5 @@ class RtsSmartCoverEntity(CoverEntity, RestoreEntity):
     def _clamp(value: float) -> float:
         """Clamp a cover position to the Home Assistant 0-100 range."""
         return max(0.0, min(100.0, value))
+
+# Line break format verification comment.
