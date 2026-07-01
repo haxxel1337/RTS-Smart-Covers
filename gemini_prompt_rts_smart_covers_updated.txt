@@ -1,0 +1,259 @@
+PROMPT TILL GOOGLE GEMINI / KODAGENT
+
+Du ska hjälpa Axel att skapa, testa och ladda upp ett nytt Home Assistant HACS custom integration-projekt till GitHub.
+
+Projekt:
+RTS Smart Covers
+
+GitHub:
+- Owner/user: haxxel1337
+- Repo name: RTS-Smart-Covers
+- Full repo: haxxel1337/RTS-Smart-Covers
+- Branch: main
+
+Lokal Windows-mapp:
+C:\Users\axelh\Dropbox\Axels mapp\Coding Projects\RTS-Smart-Covers
+
+Viktigt:
+Axel har två Python-script som ska placeras i projektmappen:
+
+1. create_rts_smart_covers_project.py
+2. test_rts_smart_covers_project.py
+
+Du ska använda dem så här:
+
+STEG 1 - Skapa projektmappen om den inte finns
+
+Skapa:
+C:\Users\axelh\Dropbox\Axels mapp\Coding Projects\RTS-Smart-Covers
+
+STEG 2 - Lägg in script-filerna
+
+Placera dessa filer direkt i projektmappen:
+C:\Users\axelh\Dropbox\Axels mapp\Coding Projects\RTS-Smart-Covers\create_rts_smart_covers_project.py
+C:\Users\axelh\Dropbox\Axels mapp\Coding Projects\RTS-Smart-Covers\test_rts_smart_covers_project.py
+
+STEG 3 - Kör generatorn
+
+Öppna terminal i projektmappen och kör:
+
+cd "C:\Users\axelh\Dropbox\Axels mapp\Coding Projects\RTS-Smart-Covers"
+python create_rts_smart_covers_project.py --force
+
+Detta ska skapa hela Home Assistant custom integration-projektet med struktur:
+
+RTS-Smart-Covers/
+  README.md
+  hacs.json
+  LICENSE
+  .gitignore
+  custom_components/
+    rts_smart_covers/
+      brand/
+        .gitkeep
+
+      __init__.py
+      manifest.json
+      const.py
+      config_flow.py
+      cover.py
+      strings.json
+      translations/
+        en.json
+        sv.json
+      brand/
+        .gitkeep
+
+Projektet ska vara en HACS custom integration, inte ett frontend-plugin.
+
+Integration:
+- domain: rts_smart_covers
+- name: RTS Smart Covers
+- folder: custom_components/rts_smart_covers
+- HACS repo name: RTS-Smart-Covers
+- Minimum Home Assistant version in hacs.json: 2026.6.1
+
+STEG 4 - Kör test-scriptet
+
+Kör:
+
+python test_rts_smart_covers_project.py
+
+Test-scriptet ska validera:
+- att alla filer finns
+- att JSON är giltigt
+- att manifest.json har rätt domain/name/config_flow/version/iot_class
+- att hacs.json är giltigt
+- att Python-filerna kompilerar
+- att cover.py innehåller CoverEntity, RestoreEntity, SET_POSITION, async_call_later, monotonic osv.
+- att config_flow.py innehåller EntitySelector, TextSelector, NumberSelector, unique-id, duplicate abort och reconfigure flow
+- att translations/en.json och translations/sv.json har samma nycklar som strings.json
+- att README nämner HACS, Somfy RTS, RFXtrx, 0/100 semantics, custom_components/rts_smart_covers/brand/logo.png och custom_components/rts_smart_covers/brand/icon.png
+- att timingmatematiken fungerar:
+  - 100 till 30 med 35s = 24.5s close
+  - 0 till 30 med 35s = 10.5s open
+  - 30 till 70 med 35s = 14s open
+
+Om testet failar:
+- Läs exakt vilken rad som failar.
+- Korrigera projektfilerna.
+- Kör testet igen.
+- Fortsätt tills alla tester passerar.
+
+STEG 5 - Kontrollera integrationens syfte
+
+Integrationens funktion:
+
+Den ska skapa en virtuell smart cover ovanpå en RTS/RFXtrx-cover som bara stödjer:
+- open
+- stop
+- close
+
+Exempel source cover:
+cover.officesoversleft2
+
+När användaren lägger till integrationen via:
+Settings -> Devices & Services -> Add Integration -> RTS Smart Covers
+
+ska config flow fråga efter:
+1. Source cover
+   - entity selector med domain cover
+   - exempel cover.officesoversleft2
+
+2. Smart cover name
+   - textfält
+   - exempel Office Covers Left Smart
+
+3. Travel time seconds
+   - number selector
+   - min 1
+   - max 300
+   - step 0.5
+   - unit s
+   - exempel 35
+
+4. Initial assumed position
+   - number selector
+   - 0-100
+   - step 1
+   - unit %
+   - exempel 100
+
+Den nya covern ska:
+- stödja open
+- stödja close
+- stödja stop
+- stödja set_cover_position / slider
+- visa current_cover_position 0-100
+- använda Home Assistants standard: 0 = closed, 100 = open
+- ha assumed_state = true
+- använda RestoreEntity för att återställa senaste antagna position efter restart
+- uppdatera UI-state medan den rör sig, ca 1 gång per sekund
+- skicka open/close/stop till source covern
+- automatiskt skicka stop när beräknad tid gått
+
+Logik:
+- Om current position är 100 och target är 30:
+  - difference = -70
+  - duration = 70% av 35 = 24.5s
+  - service = cover.close_cover
+  - efter 24.5s: cover.stop_cover
+
+- Om current position är 0 och target är 30:
+  - difference = 30
+  - duration = 30% av 35 = 10.5s
+  - service = cover.open_cover
+  - efter 10.5s: cover.stop_cover
+
+Viktiga implementation notes:
+- All logik ska ligga i Python-koden i integrationen.
+- Den får inte kräva input_number, input_select, input_datetime, timer, scripts, automations eller template covers.
+- Använd time.monotonic() för tidsberäkning.
+- Använd homeassistant.helpers.event.async_call_later för timers.
+- Använd CoverEntity och RestoreEntity.
+- Använd CoverEntityFeature.OPEN, CLOSE, STOP och SET_POSITION.
+- Använd CoverDeviceClass.SHADE som default.
+- Om source cover är unavailable eller unknown ska smart covern också vara unavailable.
+- Om ett nytt kommando kommer medan covern rör sig ska integrationen först stoppa och räkna fram antagen position, sedan starta ny rörelse.
+
+STEG 6 - Lägg till logo/icon senare
+
+Projektet har en brand-mapp:
+
+brand/
+
+Axel kommer själv lägga in:
+custom_components/rts_smart_covers/brand/logo.png
+custom_components/rts_smart_covers/brand/icon.png
+
+Du ska inte skapa fejkade bilder, men behåll custom_components/rts_smart_covers/brand/.gitkeep så mappen finns i Git. Brand-mappen ska ligga inne i custom_components/rts_smart_covers/brand/ enligt Home Assistant 2026.3+.
+
+STEG 7 - GitHub
+
+När test-scriptet passerar:
+
+Kör:
+
+git init
+git add .
+git commit -m "Initial RTS Smart Covers integration"
+
+Skapa repo och pusha.
+
+Om GitHub CLI finns:
+
+gh repo create haxxel1337/RTS-Smart-Covers --public --source . --remote origin --push
+
+Om repo redan finns eller om GitHub CLI inte används:
+
+git remote add origin https://github.com/haxxel1337/RTS-Smart-Covers.git
+git branch -M main
+git push -u origin main
+
+STEG 8 - Slutrapport
+
+När allt är klart ska du rapportera:
+- vilka filer som skapades
+- att test-scriptet passerade
+- Git remote URL
+- commit hash
+- länk till GitHub-repot
+- eventuella manuella steg Axel behöver göra i Home Assistant/HACS
+
+HACS-installation efter push:
+1. Home Assistant -> HACS
+2. tre punkter -> Custom repositories
+3. URL: https://github.com/haxxel1337/RTS-Smart-Covers
+4. Category/type: Integration
+5. Install
+6. Restart Home Assistant
+7. Settings -> Devices & Services -> Add Integration -> RTS Smart Covers
+
+Home Assistant test:
+1. Source cover: cover.officesoversleft2
+2. Smart cover name: Office Covers Left Smart
+3. Travel time: 35
+4. Initial position: 100
+5. Developer Tools -> Actions:
+   action: cover.set_cover_position
+   target:
+     entity_id: cover.office_covers_left_smart
+   data:
+     position: 30
+6. Förväntat: source cover kör close ca 24.5 sekunder och stoppar.
+
+
+VIKTIG MODERN HA 2026-ANPASSNING:
+- Använd reconfigure flow för att ändra source cover, smart cover name, travel time och initial position.
+- Använd inte options flow för dessa setup-data.
+- config_flow.py ska ha async_step_reconfigure och använda async_update_reload_and_abort.
+- hacs.json ska ha "homeassistant": "2026.6.1" eftersom lokala brand images i custom_components/<domain>/brand/ kräver Home Assistant 2026.3+.
+- brand/.gitkeep ska ligga i custom_components/rts_smart_covers/brand/.gitkeep, inte i repository root.
+
+
+VIKTIG HA 2026.6.1+-ANPASSNING:
+- Projektet ska målrikta Home Assistant 2026.6.1 och senare, men byggas framtidssäkert med moderna API-mönster.
+- Behåll modern config flow + reconfigure flow.
+- Behåll local brand images i custom_components/rts_smart_covers/brand/.
+- CoverEntity API, current_cover_position 0-100 och CoverEntityFeature.SET_POSITION ska användas.
+- future Home Assistant developer notes om nya unit-enums påverkar inte den här integrationen eftersom den inte skapar sensor-enheter med deprecated unit constants.
