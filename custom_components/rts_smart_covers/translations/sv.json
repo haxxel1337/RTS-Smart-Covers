@@ -4,30 +4,28 @@
     "step": {
       "user": {
         "title": "Skapa RTS smart cover",
-        "description": "Skapa en virtuell positions-cover fr\u00e5n en RTS/RFXtrx-cover som bara st\u00f6der \u00f6ppna, stoppa och st\u00e4ng.",
+        "description": "Skapa en virtuell positions-cover från en RTS/RFXtrx-cover som bara stöder öppna, stoppa och stäng.",
         "data": {
-          "source_cover": "K\u00e4ll-cover",
-          "name": "Namn p\u00e5 smart cover",
-          "travel_time": "Full g\u00e5ngtid",
+          "source_cover": "Käll-cover",
+          "name": "Namn på smart cover",
+          "travel_time": "Full gångtid",
+          "initial_position": "Initial antagen position"
+        }
+      },
+      "reconfigure": {
+        "title": "Konfigurera om RTS smart cover",
+        "description": "Uppdatera käll-cover, namn på smart cover, gångtid eller initial antagen position.",
+        "data": {
+          "source_cover": "Käll-cover",
+          "name": "Namn på smart cover",
+          "travel_time": "Full gångtid",
           "initial_position": "Initial antagen position"
         }
       }
     },
     "abort": {
-      "already_configured": "Den h\u00e4r k\u00e4ll-covern \u00e4r redan konfigurerad."
-    }
-  },
-  "options": {
-    "step": {
-      "init": {
-        "title": "RTS Smart Covers inst\u00e4llningar",
-        "data": {
-          "source_cover": "K\u00e4ll-cover",
-          "name": "Namn p\u00e5 smart cover",
-          "travel_time": "Full g\u00e5ngtid",
-          "initial_position": "Initial antagen position"
-        }
-      }
+      "already_configured": "Den här käll-covern är redan konfigurerad.",
+      "reconfigure_successful": "RTS Smart Covers konfigurerades om."
     }
   }
 }

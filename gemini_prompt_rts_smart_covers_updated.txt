@@ -47,10 +47,11 @@ RTS-Smart-Covers/
   hacs.json
   LICENSE
   .gitignore
-  brand/
-    .gitkeep
   custom_components/
     rts_smart_covers/
+      brand/
+        .gitkeep
+
       __init__.py
       manifest.json
       const.py
@@ -60,6 +61,8 @@ RTS-Smart-Covers/
       translations/
         en.json
         sv.json
+      brand/
+        .gitkeep
 
 Projektet ska vara en HACS custom integration, inte ett frontend-plugin.
 
@@ -68,6 +71,7 @@ Integration:
 - name: RTS Smart Covers
 - folder: custom_components/rts_smart_covers
 - HACS repo name: RTS-Smart-Covers
+- Minimum Home Assistant version in hacs.json: 2026.6.1
 
 STEG 4 - Kör test-scriptet
 
@@ -82,9 +86,9 @@ Test-scriptet ska validera:
 - att hacs.json är giltigt
 - att Python-filerna kompilerar
 - att cover.py innehåller CoverEntity, RestoreEntity, SET_POSITION, async_call_later, monotonic osv.
-- att config_flow.py innehåller EntitySelector, TextSelector, NumberSelector, unique-id och duplicate abort
+- att config_flow.py innehåller EntitySelector, TextSelector, NumberSelector, unique-id, duplicate abort och reconfigure flow
 - att translations/en.json och translations/sv.json har samma nycklar som strings.json
-- att README nämner HACS, Somfy RTS, RFXtrx, 0/100 semantics, brand/logo.png och brand/icon.png
+- att README nämner HACS, Somfy RTS, RFXtrx, 0/100 semantics, custom_components/rts_smart_covers/brand/logo.png och custom_components/rts_smart_covers/brand/icon.png
 - att timingmatematiken fungerar:
   - 100 till 30 med 35s = 24.5s close
   - 0 till 30 med 35s = 10.5s open
@@ -179,10 +183,10 @@ Projektet har en brand-mapp:
 brand/
 
 Axel kommer själv lägga in:
-brand/logo.png
-brand/icon.png
+custom_components/rts_smart_covers/brand/logo.png
+custom_components/rts_smart_covers/brand/icon.png
 
-Du ska inte skapa fejkade bilder, men behåll brand/.gitkeep så mappen finns i Git.
+Du ska inte skapa fejkade bilder, men behåll custom_components/rts_smart_covers/brand/.gitkeep så mappen finns i Git. Brand-mappen ska ligga inne i custom_components/rts_smart_covers/brand/ enligt Home Assistant 2026.3+.
 
 STEG 7 - GitHub
 
@@ -237,3 +241,19 @@ Home Assistant test:
    data:
      position: 30
 6. Förväntat: source cover kör close ca 24.5 sekunder och stoppar.
+
+
+VIKTIG MODERN HA 2026-ANPASSNING:
+- Använd reconfigure flow för att ändra source cover, smart cover name, travel time och initial position.
+- Använd inte options flow för dessa setup-data.
+- config_flow.py ska ha async_step_reconfigure och använda async_update_reload_and_abort.
+- hacs.json ska ha "homeassistant": "2026.6.1" eftersom lokala brand images i custom_components/<domain>/brand/ kräver Home Assistant 2026.3+.
+- brand/.gitkeep ska ligga i custom_components/rts_smart_covers/brand/.gitkeep, inte i repository root.
+
+
+VIKTIG HA 2026.6.1+-ANPASSNING:
+- Projektet ska målrikta Home Assistant 2026.6.1 och senare, men byggas framtidssäkert med moderna API-mönster.
+- Behåll modern config flow + reconfigure flow.
+- Behåll local brand images i custom_components/rts_smart_covers/brand/.
+- CoverEntity API, current_cover_position 0-100 och CoverEntityFeature.SET_POSITION ska användas.
+- future Home Assistant developer notes om nya unit-enums påverkar inte den här integrationen eftersom den inte skapar sensor-enheter med deprecated unit constants.

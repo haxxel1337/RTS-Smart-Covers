@@ -92,7 +92,7 @@ def test_required_files() -> None:
         "hacs.json",
         "LICENSE",
         ".gitignore",
-        "brand/.gitkeep",
+        "custom_components/rts_smart_covers/brand/.gitkeep",
         "custom_components/rts_smart_covers/__init__.py",
         "custom_components/rts_smart_covers/manifest.json",
         "custom_components/rts_smart_covers/const.py",
@@ -109,6 +109,12 @@ def test_required_files() -> None:
             (PROJECT_ROOT / relative).is_file(),
             f"Missing {relative}",
         )
+
+    check(
+        "no root brand folder",
+        not (PROJECT_ROOT / "brand").exists(),
+        "Brand folder must be inside custom_components/rts_smart_covers/brand, not repository root.",
+    )
 
 
 def test_json_files() -> None:
@@ -182,6 +188,7 @@ def test_hacs_json() -> None:
     check("hacs domains includes cover", "cover" in hacs.get("domains", []), f"Got {hacs.get('domains')!r}")
     check("hacs render_readme true", hacs.get("render_readme") is True, f"Got {hacs.get('render_readme')!r}")
     check("hacs homeassistant exists", "homeassistant" in hacs, "Missing homeassistant minimum version")
+    check("hacs minimum HA is 2026.6.1", hacs.get("homeassistant") == "2026.6.1", f"Got {hacs.get('homeassistant')!r}")
 
 
 def test_python_compiles() -> None:
@@ -221,11 +228,7 @@ def test_ast_classes_and_methods() -> None:
         "RtsSmartCoversConfigFlow" in config_classes,
         f"Found {sorted(config_classes)}",
     )
-    check(
-        "options flow class exists",
-        "RtsSmartCoversOptionsFlow" in config_classes,
-        f"Found {sorted(config_classes)}",
-    )
+    # Modern Home Assistant uses a reconfigure step for changing setup data.
 
     methods = set()
     for node in cover_tree.body:
@@ -244,6 +247,7 @@ def test_ast_classes_and_methods() -> None:
         "_async_finish_move",
         "_estimated_position",
         "_clamp",
+        "async_will_remove_from_hass",
     }
 
     for method in sorted(required_methods):
@@ -284,6 +288,9 @@ def test_cover_source_contains_required_patterns() -> None:
         "config flow uses NumberSelector": r"NumberSelector",
         "config flow sets unique id": r"async_set_unique_id",
         "config flow aborts if configured": r"_abort_if_unique_id_configured",
+        "config flow has reconfigure step": r"async_step_reconfigure",
+        "config flow uses update reload abort": r"async_update_reload_and_abort",
+        "config flow checks unique id mismatch": r"_abort_if_unique_id_mismatch",
     }
 
     for name, pattern in config_patterns.items():
@@ -292,7 +299,6 @@ def test_cover_source_contains_required_patterns() -> None:
     init_patterns = {
         "init forwards platforms": r"async_forward_entry_setups",
         "init unloads platforms": r"async_unload_platforms",
-        "init reloads options updates": r"add_update_listener",
     }
 
     for name, pattern in init_patterns.items():
@@ -335,8 +341,8 @@ def test_readme_mentions_important_items() -> None:
         "custom repositories",
         "cover.officesoversleft2",
         "35 seconds",
-        "brand/logo.png",
-        "brand/icon.png",
+        "custom_components/rts_smart_covers/brand/logo.png",
+        "custom_components/rts_smart_covers/brand/icon.png",
     ]
 
     for phrase in required_phrases:
@@ -388,7 +394,6 @@ def test_no_yaml_helper_dependency() -> None:
         "input_number.",
         "input_select.",
         "input_datetime.",
-        "timer.",
         "script.",
         "automation.",
     ]

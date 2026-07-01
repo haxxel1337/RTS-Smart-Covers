@@ -84,6 +84,11 @@ class RtsSmartCoverEntity(CoverEntity, RestoreEntity):
         self._auto_stop_unsub = None
         self._tick_unsub = None
 
+
+    async def async_will_remove_from_hass(self) -> None:
+        """Cancel pending timers when Home Assistant removes the entity."""
+        self._clear_timers()
+
     async def async_added_to_hass(self) -> None:
         """Restore the last assumed position after Home Assistant restart."""
         last_state = await self.async_get_last_state()
@@ -301,13 +306,13 @@ class RtsSmartCoverEntity(CoverEntity, RestoreEntity):
         self._cancel_tick_timer()
 
     def _cancel_auto_stop_timer(self) -> None:
-        """Cancel the pending auto-stop timer workflow"""
+        """Cancel the pending auto-stop timer."""
         if self._auto_stop_unsub is not None:
             self._auto_stop_unsub()
             self._auto_stop_unsub = None
 
     def _cancel_tick_timer(self) -> None:
-        """Cancel the UI tick timer workflow"""
+        """Cancel the UI tick timer."""
         if self._tick_unsub is not None:
             self._tick_unsub()
             self._tick_unsub = None

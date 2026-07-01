@@ -68,6 +68,10 @@ Because:
 - Supports multiple smart covers, one config entry per source cover.
 - Does not require YAML helpers, scripts, automations, timers or template covers.
 
+## Reconfigure
+
+After setup, use the integration's **Reconfigure** action from Home Assistant's integration page to change the source cover, smart cover name, travel time or initial assumed position.
+
 ## Important limitation
 
 The position is estimated, not measured.
@@ -179,13 +183,15 @@ layout: vertical
 
 ## Branding
 
-This repository includes a `brand` folder.
+For Home Assistant 2026.3 and newer, custom integrations can ship local brand images inside their own integration directory.
+
+This integration includes a `brand` folder inside `custom_components/rts_smart_covers`.
 
 Place these files there:
 
 ```text
-brand/logo.png
-brand/icon.png
+custom_components/rts_smart_covers/brand/logo.png
+custom_components/rts_smart_covers/brand/icon.png
 ```
 
 These are for your own project/repository branding. The integration itself does not require them to run.

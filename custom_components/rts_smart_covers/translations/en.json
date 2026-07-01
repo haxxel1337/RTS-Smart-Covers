@@ -11,16 +11,10 @@
           "travel_time": "Full travel time",
           "initial_position": "Initial assumed position"
         }
-      }
-    },
-    "abort": {
-      "already_configured": "This source cover is already configured."
-    }
-  },
-  "options": {
-    "step": {
-      "init": {
-        "title": "RTS Smart Covers options",
+      },
+      "reconfigure": {
+        "title": "Reconfigure RTS smart cover",
+        "description": "Update the source cover, smart cover name, travel time or initial assumed position.",
         "data": {
           "source_cover": "Source cover",
           "name": "Smart cover name",
@@ -28,6 +22,10 @@
           "initial_position": "Initial assumed position"
         }
       }
+    },
+    "abort": {
+      "already_configured": "This source cover is already configured.",
+      "reconfigure_successful": "RTS Smart Covers was reconfigured successfully."
     }
   }
 }
