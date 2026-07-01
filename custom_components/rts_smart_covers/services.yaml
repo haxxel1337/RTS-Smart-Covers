@@ -1,0 +1,34 @@
+set_known_position:
+  name: Set known position
+  description: Set the assumed position of an RTS Smart Cover without moving the physical cover.
+  target:
+    entity:
+      integration: rts_smart_covers
+      domain: cover
+  fields:
+    position:
+      name: Position
+      description: Known cover position where 0 is fully closed and 100 is fully open.
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 100
+          step: 1
+          unit_of_measurement: "%"
+
+mark_open:
+  name: Mark open
+  description: Mark an RTS Smart Cover as fully open without moving the physical cover.
+  target:
+    entity:
+      integration: rts_smart_covers
+      domain: cover
+
+mark_closed:
+  name: Mark closed
+  description: Mark an RTS Smart Cover as fully closed without moving the physical cover.
+  target:
+    entity:
+      integration: rts_smart_covers
+      domain: cover

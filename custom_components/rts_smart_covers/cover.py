@@ -175,6 +175,29 @@ class RtsSmartCoverEntity(CoverEntity, RestoreEntity):
         """Stop the cover and store the current estimated position."""
         await self._async_stop_and_store(send_stop=True)
 
+    async def async_set_known_position(self, position: int) -> None:
+        """Set the assumed position of the cover without moving it."""
+        was_moving = self._direction is not None
+        self._clear_timers()
+
+        if was_moving:
+            await self._async_source_call(SERVICE_STOP_COVER)
+
+        self._position = self._clamp(position)
+        self._direction = None
+        self._target_position = None
+        self._started_at = None
+
+        self.async_write_ha_state()
+
+    async def async_mark_open(self) -> None:
+        """Mark the cover as fully open without moving it."""
+        await self.async_set_known_position(100)
+
+    async def async_mark_closed(self) -> None:
+        """Mark the cover as fully closed without moving it."""
+        await self.async_set_known_position(0)
+
     async def _async_move_to(self, target_position: float) -> None:
         """Move the cover to a position by timing open/close then sending stop."""
         target_position = self._clamp(target_position)

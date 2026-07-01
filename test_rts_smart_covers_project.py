@@ -101,6 +101,7 @@ def test_required_files() -> None:
         "custom_components/rts_smart_covers/strings.json",
         "custom_components/rts_smart_covers/translations/en.json",
         "custom_components/rts_smart_covers/translations/sv.json",
+        "custom_components/rts_smart_covers/services.yaml",
     ]
 
     for relative in required:
@@ -148,7 +149,7 @@ def test_manifest() -> None:
         "name": "RTS Smart Covers",
         "config_flow": True,
         "iot_class": "local_push",
-        "version": "0.2.0",
+        "version": "0.3.0",
     }
 
     for key, expected_value in expected.items():
@@ -248,6 +249,9 @@ def test_ast_classes_and_methods() -> None:
         "_estimated_position",
         "_clamp",
         "async_will_remove_from_hass",
+        "async_set_known_position",
+        "async_mark_open",
+        "async_mark_closed",
     }
 
     for method in sorted(required_methods):
@@ -299,6 +303,7 @@ def test_cover_source_contains_required_patterns() -> None:
     init_patterns = {
         "init forwards platforms": r"async_forward_entry_setups",
         "init unloads platforms": r"async_unload_platforms",
+        "init registers platform entity service": r"async_register_platform_entity_service",
     }
 
     for name, pattern in init_patterns.items():
@@ -444,6 +449,18 @@ def print_summary() -> int:
     return 0
 
 
+def test_services_yaml() -> None:
+    services_path = INTEGRATION / "services.yaml"
+    check("services.yaml exists", services_path.is_file(), "Missing services.yaml")
+    if not services_path.is_file():
+        return
+
+    content = read_text(services_path)
+    check("services.yaml contains set_known_position", "set_known_position:" in content)
+    check("services.yaml contains mark_open", "mark_open:" in content)
+    check("services.yaml contains mark_closed", "mark_closed:" in content)
+
+
 def main() -> int:
     print("Running RTS Smart Covers project validation...")
     print(f"Project root: {PROJECT_ROOT}")
@@ -458,6 +475,7 @@ def main() -> int:
     test_json_files()
     test_manifest()
     test_hacs_json()
+    test_services_yaml()
     test_python_compiles()
     test_ast_classes_and_methods()
     test_cover_source_contains_required_patterns()
