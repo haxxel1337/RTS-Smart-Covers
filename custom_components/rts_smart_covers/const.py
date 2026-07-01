@@ -1,4 +1,5 @@
 """Constants for RTS Smart Covers."""
+
 from __future__ import annotations
 
 from homeassistant.const import Platform
@@ -16,3 +17,9 @@ DEFAULT_INITIAL_POSITION = 100
 
 MIN_TRAVEL_TIME = 1.0
 MAX_TRAVEL_TIME = 300.0
+
+DATA_ENTITIES = "entities"
+
+SERVICE_SET_KNOWN_POSITION = "set_known_position"
+SERVICE_MARK_OPEN = "mark_open"
+SERVICE_MARK_CLOSED = "mark_closed"

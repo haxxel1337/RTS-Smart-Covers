@@ -1,10 +1,9 @@
 {
-  "title": "RTS Smart Covers",
   "config": {
     "step": {
       "user": {
-        "title": "Skapa RTS smart cover",
-        "description": "Skapa en virtuell positions-cover från en RTS/RFXtrx-cover som bara stöder öppna, stoppa och stäng.",
+        "title": "RTS Smart Covers",
+        "description": "Skapa en smart tidsbaserad cover för en RTS/RFXtrx-cover.",
         "data": {
           "source_cover": "Käll-cover",
           "name": "Namn på smart cover",
@@ -13,8 +12,8 @@
         }
       },
       "reconfigure": {
-        "title": "Konfigurera om RTS smart cover",
-        "description": "Uppdatera käll-cover, namn på smart cover, gångtid eller initial antagen position.",
+        "title": "Konfigurera om RTS Smart Cover",
+        "description": "Uppdatera käll-cover, namn, gångtid eller antagen position.",
         "data": {
           "source_cover": "Käll-cover",
           "name": "Namn på smart cover",
@@ -25,7 +24,7 @@
     },
     "abort": {
       "already_configured": "Den här käll-covern är redan konfigurerad.",
-      "reconfigure_successful": "RTS Smart Covers konfigurerades om."
+      "reconfigure_successful": "RTS Smart Cover har konfigurerats om."
     }
   }
 }

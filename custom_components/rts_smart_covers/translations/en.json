@@ -1,10 +1,9 @@
 {
-  "title": "RTS Smart Covers",
   "config": {
     "step": {
       "user": {
-        "title": "Create RTS smart cover",
-        "description": "Create a virtual position cover from an RTS/RFXtrx cover that only supports open, stop and close.",
+        "title": "RTS Smart Covers",
+        "description": "Create a smart timed cover for an RTS/RFXtrx cover.",
         "data": {
           "source_cover": "Source cover",
           "name": "Smart cover name",
@@ -13,8 +12,8 @@
         }
       },
       "reconfigure": {
-        "title": "Reconfigure RTS smart cover",
-        "description": "Update the source cover, smart cover name, travel time or initial assumed position.",
+        "title": "Reconfigure RTS Smart Cover",
+        "description": "Update the source cover, name, travel time or assumed position.",
         "data": {
           "source_cover": "Source cover",
           "name": "Smart cover name",
@@ -25,7 +24,7 @@
     },
     "abort": {
       "already_configured": "This source cover is already configured.",
-      "reconfigure_successful": "RTS Smart Covers was reconfigured successfully."
+      "reconfigure_successful": "RTS Smart Cover reconfiguration complete."
     }
   }
 }
