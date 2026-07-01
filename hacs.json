@@ -1,0 +1,8 @@
+{
+  "name": "RTS Smart Covers",
+  "render_readme": true,
+  "domains": [
+    "cover"
+  ],
+  "homeassistant": "2024.6.0"
+}
