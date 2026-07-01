@@ -13,9 +13,9 @@
       },
       "reconfigure": {
         "title": "Reconfigure RTS Smart Cover",
-        "description": "Update the source cover, name, travel time or assumed position.",
+        "description": "Update the smart cover name, travel time or initial assumed position. The source cover cannot be changed here; remove this entry and create a new one if you need another source cover.",
         "data": {
-          "source_cover": "Source cover",
+          "source_cover": "Source cover (cannot be changed)",
           "name": "Smart cover name",
           "travel_time": "Full travel time",
           "initial_position": "Initial assumed position"

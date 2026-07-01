@@ -52,3 +52,16 @@ Local brand assets should be placed here:
 custom_components/rts_smart_covers/brand/logo.png
 custom_components/rts_smart_covers/brand/icon.png
 ```
+
+## Reconfigure
+
+You can reconfigure an existing RTS Smart Cover from the Home Assistant integration settings.
+
+Reconfigure can update:
+
+- Smart cover name
+- Travel time
+- Initial assumed position
+
+The source cover is used as the config entry unique ID and cannot be changed in-place.
+To use another source cover, remove the existing RTS Smart Cover entry and create a new one.

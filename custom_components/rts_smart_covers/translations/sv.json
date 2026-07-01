@@ -13,9 +13,9 @@
       },
       "reconfigure": {
         "title": "Konfigurera om RTS Smart Cover",
-        "description": "Uppdatera käll-cover, namn, gångtid eller antagen position.",
+        "description": "Uppdatera namn, gångtid eller initial antagen position. Käll-covern kan inte ändras här; ta bort posten och skapa en ny om du behöver använda en annan käll-cover.",
         "data": {
-          "source_cover": "Käll-cover",
+          "source_cover": "Käll-cover (kan inte ändras)",
           "name": "Namn på smart cover",
           "travel_time": "Full gångtid",
           "initial_position": "Initial antagen position"

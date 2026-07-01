@@ -35,6 +35,7 @@ def test_required_files() -> None:
         ROOT / "hacs.json",
         ROOT / "LICENSE",
         ROOT / ".gitignore",
+        ROOT / ".gitattributes",
         INTEGRATION_DIR / "__init__.py",
         INTEGRATION_DIR / "manifest.json",
         INTEGRATION_DIR / "const.py",
@@ -51,9 +52,22 @@ def test_required_files() -> None:
     assert_true(not (ROOT / "brand").exists(), "Root brand/ folder must not exist")
 
 
+def test_gitattributes() -> None:
+    gitattributes = read(ROOT / ".gitattributes")
+    for needle in [
+        "*.py text eol=lf",
+        "*.json text eol=lf",
+        "*.yaml text eol=lf",
+        ".gitignore text eol=lf",
+        ".gitattributes text eol=lf",
+    ]:
+        assert_true(needle in gitattributes, f".gitattributes missing {needle}")
+
+
 def test_newlines() -> None:
     files = [
         ROOT / ".gitignore",
+        ROOT / ".gitattributes",
         INTEGRATION_DIR / "__init__.py",
         INTEGRATION_DIR / "const.py",
         INTEGRATION_DIR / "config_flow.py",
@@ -82,6 +96,20 @@ def test_json() -> None:
     assert_true(manifest["version"].count(".") == 2, "manifest version must be semver-like")
     assert_true(hacs["homeassistant"] == "2026.6.1", "hacs minimum HA version mismatch")
     assert_true("cover" in hacs["domains"], "hacs domains must include cover")
+
+
+def test_reconfigure_text() -> None:
+    strings = read(INTEGRATION_DIR / "strings.json")
+    en = read(INTEGRATION_DIR / "translations" / "en.json")
+    sv = read(INTEGRATION_DIR / "translations" / "sv.json")
+    readme = read(ROOT / "README.md")
+
+    assert_true("Source cover (cannot be changed)" in strings, "strings.json reconfigure source-cover label is unclear")
+    assert_true("Source cover (cannot be changed)" in en, "en.json reconfigure source-cover label is unclear")
+    assert_true("cannot be changed here" in en, "en.json must explain source_cover cannot be changed")
+    assert_true("Käll-cover (kan inte ändras)" in sv, "sv.json reconfigure source-cover label is unclear")
+    assert_true("Käll-covern kan inte ändras här" in sv, "sv.json must explain source_cover cannot be changed")
+    assert_true("source cover is used as the config entry unique ID" in readme, "README must explain source-cover limitation")
 
 
 def test_python_compiles_and_ast() -> None:
@@ -172,7 +200,9 @@ def main() -> None:
     tests = [
         test_required_files,
         test_newlines,
+        test_gitattributes,
         test_json,
+        test_reconfigure_text,
         test_python_compiles_and_ast,
         test_cover_code_patterns,
         test_config_flow_patterns,
